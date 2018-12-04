@@ -182,7 +182,19 @@ class MarkdownConverter(object):
         src = el.attrs.get('src', None) or ''
         title = el.attrs.get('title', None) or ''
         title_part = ' "%s"' % title.replace('"', r'\"') if title else ''
-        return '![%s](%s%s)' % (alt, src, title_part)
+
+        width = el.attrs.get('width', None)
+        height = el.attrs.get('height', None)
+        size = ''
+
+        if width and not height:
+            size = ' =%s' % width
+        elif height and not width:
+            size = ' =%s' % height
+        elif width and height:
+            size = ' =%sx%s' % (width, height)
+
+        return '![%s](%s%s%s)' % (alt, src, title_part, size)
 
 
 def markdownify(html, **options):
